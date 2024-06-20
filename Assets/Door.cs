@@ -12,14 +12,9 @@ public class Door : TiltInteractable
         targetRots.Add(transform.parent.rotation);
         targetRots.Add(Quaternion.AngleAxis(90, Vector3.up));
     }
-    override public bool Interact(Transform crosshair, Transform lineup, RaycastHit hit)
+    override public void Interact(RaycastHit hit)
     {
-        if (base.Interact(crosshair, lineup, hit))
-        {
-            dir = dir <= 0 ? 1.0f : -1.0f;
-            return true;
-        }
-        return false;
+        dir = dir <= 0 ? 1.0f : -1.0f;
     }
 
     private void Update()

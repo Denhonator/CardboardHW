@@ -2,18 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : MonoBehaviour
+public class Orbit : TiltInteractable
 {
-    // Start is called before the first frame update
-    void Start()
+    float speed = 1.0f;
+    override public void Interact(RaycastHit hit)
     {
-        
+        speed = Random.Range(1.0f, 100.0f);
     }
-
-    // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, Time.deltaTime, 0);
+        transform.Rotate(0, speed*Time.deltaTime, 0);
     }
 }
 

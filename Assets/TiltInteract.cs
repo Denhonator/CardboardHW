@@ -8,9 +8,32 @@ public class TiltInteract : MonoBehaviour
     public LayerMask layerMask;
     public Transform lineup;
     Renderer rend;
+    TiltGrab grabbed = null;
+    float grabDistance = 0;
+    static float lineupAngle = 45;
+    float triggerAngle = 5.0f;
+    float resetAngle = lineupAngle * 0.6f;
+    bool hasTriggered = false;
+    public static TiltInteract instance;
     void Start()
     {
         rend = GetComponentInChildren<Renderer>();
+        instance = this;
+    }
+
+    bool CheckOrientation()
+    {
+        float angle = Quaternion.Angle(transform.rotation, lineup.rotation);
+        if (angle > lineupAngle)
+            angle = Mathf.Abs(angle - lineupAngle * 2);
+        if (angle < triggerAngle && !hasTriggered)
+        {
+            hasTriggered = true;
+            return true;
+        }
+        else if (angle > resetAngle)
+            hasTriggered = false;
+        return false;
     }
 
     void FindSurface()
@@ -22,10 +45,7 @@ public class TiltInteract : MonoBehaviour
         {
             transform.position = hit.point + hit.normal*0.01f;
             transform.LookAt(hit.point + hit.normal);
-            Vector3 eulers = transform.rotation.eulerAngles;
-            eulers.z = -cam.rotation.eulerAngles.z;
-            transform.rotation = Quaternion.Euler(eulers);
-            transform.localScale = Vector3.one * 0.005f * Vector3.Distance(cam.position, transform.position);
+            transform.Rotate(0, 0, -2f*cam.rotation.eulerAngles.z);
             if (hit.transform.GetComponent<TiltInteractable>())
                 FindInteractable(hit);
         }
@@ -36,16 +56,55 @@ public class TiltInteract : MonoBehaviour
         lineup.gameObject.SetActive(true);
         lineup.position = transform.position;
         lineup.LookAt(hit.point + hit.normal);
-        lineup.Rotate(0, 0, 45);
-        lineup.localScale = transform.localScale;
+        lineup.Rotate(0, 0, lineupAngle);
         rend.enabled = true;
-        hit.transform.GetComponent<TiltInteractable>().Interact(transform, lineup, hit);
+        if(CheckOrientation())
+            hit.transform.GetComponent<TiltInteractable>().Interact(hit);
+    }
+
+    public void Grab(TiltGrab grabbable)
+    {
+        grabbed = grabbable;
+        if (grabbed)
+        {
+            grabDistance = Vector3.Distance(grabbed.transform.position, cam.position);
+        }
+    }
+
+    void Grabbing()
+    {
+        Vector3 target = cam.position + cam.forward * grabDistance;
+        RaycastHit[] hits = Physics.RaycastAll(cam.position, cam.forward, grabDistance);
+        RaycastHit hit = new RaycastHit();
+        foreach(RaycastHit h in hits)
+        {
+            if (h.transform != grabbed.transform && h.distance < grabDistance)
+            {
+                target = cam.position + cam.forward * (h.distance - grabbed.GetComponent<Collider>().bounds.size.magnitude);
+                hit = h;
+            }
+        }
+        transform.position = target;
+        lineup.position = target;
+        transform.LookAt(cam);
+        lineup.LookAt(cam);
+        transform.Rotate(0, 0, -2f * cam.rotation.eulerAngles.z);
+        lineup.Rotate(0, 0, lineupAngle);
+        grabbed.ProcessGrab(target);
+        if(CheckOrientation())
+            grabbed.Interact(hit);
     }
 
     void Update()
     {
-        lineup.gameObject.SetActive(false);
-        rend.enabled = false;
-        FindSurface();
+        lineup.gameObject.SetActive(grabbed);
+        rend.enabled = grabbed;
+        if (grabbed)
+            Grabbing();
+        else
+            FindSurface();
+        transform.localScale = Vector3.one * 0.005f * Vector3.Distance(cam.position, transform.position);
+        lineup.localScale = transform.localScale;
     }
 }
+

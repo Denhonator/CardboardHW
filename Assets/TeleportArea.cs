@@ -10,16 +10,8 @@ public class TeleportArea : TiltInteractable
         if (!player)
             player = GameObject.FindGameObjectWithTag("Player");
     }
-    override public bool Interact(Transform crosshair, Transform lineup, RaycastHit hit)
+    override public void Interact(RaycastHit hit)
     {
-        if (base.Interact(crosshair, lineup, hit))
-        {
-            if (player)
-            {
-                player.transform.position = hit.point + Vector3.up * 1.6f;
-            }
-            return true;
-        }
-        return false;
+        player.transform.position = hit.point + Vector3.up * 1.6f;
     }
 }
