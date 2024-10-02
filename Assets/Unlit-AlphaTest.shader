@@ -9,6 +9,7 @@ Shader "Unlit/Transparent Cutout On Top" {
 Properties {
     _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
     _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
+    _Color("Color (RGB)", Color) = (1,1,1,1)
 }
 SubShader {
     Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
@@ -41,6 +42,7 @@ SubShader {
             };
 
             sampler2D _MainTex;
+            float4 _Color;
             float4 _MainTex_ST;
             fixed _Cutoff;
 
@@ -57,7 +59,7 @@ SubShader {
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.texcoord);
+                fixed4 col = tex2D(_MainTex, i.texcoord) * _Color;
                 clip(col.a - _Cutoff);
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

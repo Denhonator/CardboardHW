@@ -7,12 +7,15 @@ public class TiltInteract : MonoBehaviour
     public Transform cam;
     public LayerMask layerMask;
     public Transform lineup;
+    Transform currentObject;
     Renderer rend;
     TiltGrab grabbed = null;
     float grabDistance = 0;
     static float lineupAngle = 45;
     float triggerAngle = 5.0f;
+    float twistMultiplier = 3f;
     float resetAngle = lineupAngle * 0.6f;
+    float startAngle = 0;
     bool hasTriggered = false;
     public static TiltInteract instance;
     void Start()
@@ -43,9 +46,15 @@ public class TiltInteract : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(cam.position, cam.forward, out hit, 10, layerMask))
         {
+            if (hit.transform != currentObject)
+            {
+                //Enable twister relative to starting roll
+                //startAngle = cam.rotation.eulerAngles.z;
+                currentObject = hit.transform;
+            }
             transform.position = hit.point + hit.normal*0.01f;
             transform.LookAt(hit.point + hit.normal);
-            transform.Rotate(0, 0, -2f*cam.rotation.eulerAngles.z);
+            transform.Rotate(0, 0, -twistMultiplier*cam.rotation.eulerAngles.z);
             if (hit.transform.GetComponent<TiltInteractable>())
                 FindInteractable(hit);
         }
@@ -56,7 +65,7 @@ public class TiltInteract : MonoBehaviour
         lineup.gameObject.SetActive(true);
         lineup.position = transform.position;
         lineup.LookAt(hit.point + hit.normal);
-        lineup.Rotate(0, 0, lineupAngle);
+        lineup.Rotate(0, 0, lineupAngle - startAngle * twistMultiplier);
         rend.enabled = true;
         if(CheckOrientation())
             hit.transform.GetComponent<TiltInteractable>().Interact(hit);
@@ -103,7 +112,7 @@ public class TiltInteract : MonoBehaviour
             Grabbing();
         else
             FindSurface();
-        transform.localScale = Vector3.one * 0.005f * Vector3.Distance(cam.position, transform.position);
+        transform.localScale = Vector3.one * 0.01f * Vector3.Distance(cam.position, transform.position);
         lineup.localScale = transform.localScale;
     }
 }
