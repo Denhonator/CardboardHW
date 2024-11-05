@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : TiltInteractable
+public class Orbit : TwistInteractable
 {
     float speed = 1.0f;
     override public void Interact(RaycastHit hit)

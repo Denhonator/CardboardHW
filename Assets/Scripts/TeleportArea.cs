@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TeleportArea : TiltInteractable
+public class TeleportArea : TwistInteractable
 {
     GameObject player;
     private void Update()

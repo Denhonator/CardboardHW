@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TiltInteract : MonoBehaviour
+public class TwistInteract : MonoBehaviour
 {
     public Transform cam;
     public LayerMask layerMask;
     public Transform lineup;
     Transform currentObject;
     Renderer rend;
-    TiltGrab grabbed = null;
+    TwistGrab grabbed = null;
     float grabDistance = 0;
     static float lineupAngle = 45;
-    float triggerAngle = 5.0f;
+    float triggerAngle = 1.0f;
     float twistMultiplier = 3f;
     float resetAngle = lineupAngle * 0.6f;
     float startAngle = 0;
     bool hasTriggered = false;
-    public static TiltInteract instance;
+    public static TwistInteract instance;
     void Start()
     {
         rend = GetComponentInChildren<Renderer>();
@@ -46,16 +46,22 @@ public class TiltInteract : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(cam.position, cam.forward, out hit, 10, layerMask))
         {
+            float rot = cam.rotation.eulerAngles.z > 180 ? cam.rotation.eulerAngles.z - 360 : cam.rotation.eulerAngles.z;
             if (hit.transform != currentObject)
             {
                 //Enable twister relative to starting roll
-                //startAngle = cam.rotation.eulerAngles.z;
+                if (hit.transform.GetComponent<TwistInteractable>() && hit.transform.GetComponent<TwistInteractable>().relative)
+                    startAngle = rot * twistMultiplier;
+                else
+                    startAngle = 0;
                 currentObject = hit.transform;
             }
             transform.position = hit.point + hit.normal*0.01f;
-            transform.LookAt(hit.point + hit.normal);
-            transform.Rotate(0, 0, -twistMultiplier*cam.rotation.eulerAngles.z);
-            if (hit.transform.GetComponent<TiltInteractable>())
+            // Conform to surface normal
+            // transform.LookAt(hit.point + hit.normal);
+            transform.LookAt(cam);
+            transform.Rotate(0, 0, Mathf.Clamp(-twistMultiplier*rot, -lineupAngle-startAngle, lineupAngle-startAngle));
+            if (hit.transform.GetComponent<TwistInteractable>())
                 FindInteractable(hit);
         }
     }
@@ -64,14 +70,16 @@ public class TiltInteract : MonoBehaviour
     {
         lineup.gameObject.SetActive(true);
         lineup.position = transform.position;
-        lineup.LookAt(hit.point + hit.normal);
-        lineup.Rotate(0, 0, lineupAngle - startAngle * twistMultiplier);
+        // Conform to surface normal
+        // lineup.LookAt(hit.point + hit.normal);
+        lineup.LookAt(cam);
+        lineup.Rotate(0, 0, lineupAngle - startAngle);
         rend.enabled = true;
         if(CheckOrientation())
-            hit.transform.GetComponent<TiltInteractable>().Interact(hit);
+            hit.transform.GetComponent<TwistInteractable>().Interact(hit);
     }
 
-    public void Grab(TiltGrab grabbable)
+    public void Grab(TwistGrab grabbable)
     {
         grabbed = grabbable;
         if (grabbed)

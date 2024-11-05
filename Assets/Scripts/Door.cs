@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : TiltInteractable
+public class Door : TwistInteractable
 {
     List<Quaternion> targetRots = new List<Quaternion>();
     float dir = 0;

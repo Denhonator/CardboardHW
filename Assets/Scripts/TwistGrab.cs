@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TiltGrab : TiltInteractable
+public class TwistGrab : TwistInteractable
 {
     Rigidbody rb;
     bool isGrabbed = false;
@@ -13,7 +13,7 @@ public class TiltGrab : TiltInteractable
     override public void Interact(RaycastHit hit)
     {
         isGrabbed = !isGrabbed;
-        TiltInteract.instance.Grab(isGrabbed ? this : null);
+        TwistInteract.instance.Grab(isGrabbed ? this : null);
         rb.useGravity = !isGrabbed;
     }
     public void ProcessGrab(Vector3 target)

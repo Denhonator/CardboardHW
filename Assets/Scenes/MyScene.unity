@@ -269,6 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1b3ed0f5a9bc73448eb55b92d9fd569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relative: 0
 --- !u!1 &87609939
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,6 +628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efbbc213eb89e484cb68f1d6f050a8dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relative: 0
 --- !u!1 &389255504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,6 +1043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbbce94dfcf202c4e8918187fd3fb879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relative: 1
 --- !u!64 &666784100
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1205,6 +1208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d7ff157c20c6c45af5ca32b4d22ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relative: 0
 --- !u!54 &679823978
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1851,6 +1855,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c934bd59adf764943804e1959484adaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relative: 0
 --- !u!65 &1212233551
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2187,6 +2192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c934bd59adf764943804e1959484adaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relative: 0
 --- !u!1001 &1420918494
 PrefabInstance:
   m_ObjectHideFlags: 0
