@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TwistInteract : MonoBehaviour
 {
+    public Transform player;
     public Transform cam;
     public LayerMask layerMask;
     public Transform lineup;
@@ -66,6 +67,9 @@ public class TwistInteract : MonoBehaviour
                 currentObject = hit.transform;
             }
 
+            // Set position at object so it's easier to focus in stereo
+            transform.position = grabbed ? cam.position + cam.forward * grabDistance : hit.point;
+            lineup.position = transform.position;
             // Set crosshair rotations
             transform.LookAt(cam);
             transform.Rotate(0, 0, Mathf.Clamp(-twistMultiplier * rot, -lineupAngle - startAngle, lineupAngle - startAngle));
@@ -78,7 +82,7 @@ public class TwistInteract : MonoBehaviour
 
             // Different processing depending if grabbing or just looking
             if (!grabbed && hit.transform.GetComponent<TwistInteractable>() && CheckOrientation())
-                hit.transform.GetComponent<TwistInteractable>().Interact(transform.parent, hit);
+                hit.transform.GetComponent<TwistInteractable>().Interact(player, hit);
         }
         else if (!grabbed)
         {
@@ -105,13 +109,15 @@ public class TwistInteract : MonoBehaviour
         // Set grabbed object target position according to distance it was originally grabbed at
         grabbed.ProcessGrab(cam.position + cam.forward * grabDistance);
         if(CheckOrientation())
-            grabbed.Interact(transform.parent);
+            grabbed.Interact(player);
     }
 
     void Update()
     {
         FindSurface();
-
+        // Keep perceived size the same
+        transform.localScale = Vector3.one * 0.01f * Vector3.Distance(cam.position, transform.position);
+        lineup.localScale = transform.localScale;
         // Set red color when interaction has happened to notify user they must reset head position before interacting again
         rend.material.color = hasTriggered ? Color.red : Color.white;
         rend2.material.color = Color.green;
