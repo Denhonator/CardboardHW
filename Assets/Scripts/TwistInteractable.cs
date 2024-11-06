@@ -5,7 +5,7 @@ using UnityEngine;
 public class TwistInteractable : MonoBehaviour
 {
     public bool relative = false;
-    virtual public void Interact(RaycastHit hit = new RaycastHit())
+    virtual public void Interact(Transform player, RaycastHit hit = new RaycastHit())
     {
     }
 }

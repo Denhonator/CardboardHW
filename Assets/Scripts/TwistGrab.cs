@@ -10,7 +10,7 @@ public class TwistGrab : TwistInteractable
     {
         rb = GetComponent<Rigidbody>();
     }
-    override public void Interact(RaycastHit hit)
+    override public void Interact(Transform player, RaycastHit hit)
     {
         isGrabbed = !isGrabbed;
         TwistInteract.instance.Grab(isGrabbed ? this : null);

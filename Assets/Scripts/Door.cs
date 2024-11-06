@@ -10,9 +10,9 @@ public class Door : TwistInteractable
     private void Start()
     {
         targetRots.Add(transform.parent.rotation);
-        targetRots.Add(Quaternion.AngleAxis(90, Vector3.up));
+        targetRots.Add(transform.parent.rotation * Quaternion.AngleAxis(90, Vector3.up));
     }
-    override public void Interact(RaycastHit hit)
+    override public void Interact(Transform player, RaycastHit hit)
     {
         dir = dir <= 0 ? 1.0f : -1.0f;
     }

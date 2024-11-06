@@ -76,7 +76,7 @@ public class TwistInteract : MonoBehaviour
         lineup.Rotate(0, 0, lineupAngle - startAngle);
         rend.enabled = true;
         if(CheckOrientation())
-            hit.transform.GetComponent<TwistInteractable>().Interact(hit);
+            hit.transform.GetComponent<TwistInteractable>().Interact(transform.parent, hit);
     }
 
     public void Grab(TwistGrab grabbable)
@@ -109,7 +109,7 @@ public class TwistInteract : MonoBehaviour
         lineup.Rotate(0, 0, lineupAngle);
         grabbed.ProcessGrab(target);
         if(CheckOrientation())
-            grabbed.Interact(hit);
+            grabbed.Interact(transform.parent, hit);
     }
 
     void Update()

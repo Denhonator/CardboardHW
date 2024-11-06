@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LookAtThis : TwistInteractable
 {
-    override public void Interact(RaycastHit hit)
+    override public void Interact(Transform player, RaycastHit hit)
     {
         GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(3.0f, 5.0f), Random.Range(-1.0f, 1.0f)), ForceMode.Impulse);
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Orbit : TwistInteractable
 {
     float speed = 1.0f;
-    override public void Interact(RaycastHit hit)
+    override public void Interact(Transform player, RaycastHit hit)
     {
         speed = Random.Range(1.0f, 100.0f);
     }
