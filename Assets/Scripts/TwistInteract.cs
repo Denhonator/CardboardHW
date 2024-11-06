@@ -24,6 +24,7 @@ public class TwistInteract : MonoBehaviour
         instance = this;
     }
 
+    // Checks if conditions for twist interaction are met
     bool CheckOrientation()
     {
         float angle = Quaternion.Angle(transform.rotation, lineup.rotation);
@@ -122,6 +123,7 @@ public class TwistInteract : MonoBehaviour
             FindSurface();
         transform.localScale = Vector3.one * 0.01f * Vector3.Distance(cam.position, transform.position);
         lineup.localScale = transform.localScale;
+        rend.material.color = hasTriggered ? Color.red : Color.white;
     }
 }
 
