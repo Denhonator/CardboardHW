@@ -54,12 +54,13 @@ public class TwistInteract : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(cam.position, cam.forward, out hit, 10, layerMask))
         {
+            // Ensure -180 to +180 value
             float rot = cam.rotation.eulerAngles.z > 180 ? cam.rotation.eulerAngles.z - 360 : cam.rotation.eulerAngles.z;
 
-            // Check if new object is being looked at
+            // Check if a new object is being looked at
             if (!grabbed && hit.transform != currentObject)
             {
-                //Enable twister relative to starting roll
+                // Enable twister relative to starting roll
                 if (hit.transform.GetComponent<TwistInteractable>() && hit.transform.GetComponent<TwistInteractable>().relative)
                     startAngle = rot * twistMultiplier;
                 else
